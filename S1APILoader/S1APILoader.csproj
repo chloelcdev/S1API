@@ -14,6 +14,9 @@
     </PropertyGroup>
     
     <ItemGroup>
+        <Reference Include="0Harmony">
+            <HintPath>$(MelonLoaderAssembliesPath)\0Harmony.dll</HintPath>
+        </Reference>
       <PackageReference Include="LavaGang.MelonLoader" Version="0.7.0" />
     </ItemGroup>
 

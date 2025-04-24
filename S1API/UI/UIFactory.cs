@@ -10,6 +10,8 @@ using UnityEngine.UI;
 using System;
 using UnityEngine.Events;
 using System.Collections.Generic;
+using MelonLoader;
+using Object = UnityEngine.Object;
 
 namespace S1API.UI
 {
@@ -239,8 +241,26 @@ namespace S1API.UI
         /// <param name="parent">The transform whose child objects will be destroyed.</param>
         public static void ClearChildren(Transform parent)
         {
-            foreach (Transform child in parent)
-                GameObject.Destroy(child.gameObject);
+            if (parent == null)
+            {
+                return;
+            }
+
+            try
+            {
+                int count = parent.childCount;
+                for (int i = count - 1; i >= 0; i--)
+                {
+                    var child = parent.GetChild(i);
+                    if (child != null)
+                        Object.Destroy(child.gameObject);
+                }
+
+            }
+            catch (System.Exception e)
+            {
+                return;
+            }
         }
 
         /// Configures a GameObject to use a VerticalLayoutGroup with specified spacing and padding.

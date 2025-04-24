@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using MelonLoader;
 
 [assembly: MelonInfo(typeof(S1APILoader.S1APILoader), "S1APILoader", "{VERSION_NUMBER}", "KaBooMa")]
@@ -12,12 +13,9 @@ namespace S1APILoader
             
         public override void OnPreModsLoaded()
         {
-            string? pluginsFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            string? pluginsFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             if (pluginsFolder == null)
                 throw new Exception("Failed to identify plugins folder.");
-            
-            string gameFolder = Path.Combine(pluginsFolder, "..");
-            string modsFolder = Path.Combine(gameFolder, "Mods");
             
             string buildsFolder = Path.Combine(pluginsFolder, BuildFolderName);
 
@@ -25,16 +23,15 @@ namespace S1APILoader
             MelonLogger.Msg($"Loading S1API for {activeBuild}...");
             
             string s1APIBuildFile = Path.Combine(buildsFolder, $"S1API.{activeBuild}.dll");
-            
-
-            string s1APIModFile = Path.Combine(modsFolder, "S1API.dll");
 
             // FIX: https://github.com/KaBooMa/S1API/issues/30
-            // Create the Mods directory.
-            // Thunderstore doesn't by default like MelonLoader in your base installation folder.
-            Directory.CreateDirectory(modsFolder);
+            // Manual assembly loading versus file manipulation.
+            // Thunderstore doesn't pick it up if we do file manipulation.
+            Assembly assembly = Assembly.LoadFile(s1APIBuildFile);
+            MelonAssembly melonAssembly = MelonAssembly.LoadMelonAssembly(s1APIBuildFile, assembly);
+            foreach (MelonBase melon in melonAssembly.LoadedMelons)
+                melon.Register();
             
-            File.Copy(s1APIBuildFile, s1APIModFile, true);
             MelonLogger.Msg($"Successfully loaded S1API for {activeBuild}!");
         }
     }
