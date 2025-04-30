@@ -56,13 +56,36 @@ namespace S1API.Property
         /// </returns>
         public static PropertyWrapper FindPropertyByName(string name)
         {
-#if IL2CPPMELON || IL2CPPBEPINEX
+#if IL2CPPMELON || IL2CPPBEPINEX || USEIL2CPPS1
             foreach (var prop in Il2CppScheduleOne.Property.Property.Properties)
 #elif MONOMELON || MONOBEPINEX
             foreach (var prop in ScheduleOne.Property.Property.Properties)
 #endif
             {
                 if (prop.PropertyName == name)
+                {
+                    return new PropertyWrapper(prop);
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Finds a property with the given name from the list of available properties.
+        /// </summary>
+        /// <param name="name">The name of the property to search for.</param>
+        /// <returns>
+        /// A <see cref="PropertyWrapper"/> representing the property with the specified name if found; otherwise, null.
+        /// </returns>
+        public static PropertyWrapper FindPropertyByPropertyCode(string propertyCode)
+        {
+#if IL2CPPMELON || IL2CPPBEPINEX || USEIL2CPPS1
+            foreach (var prop in Il2CppScheduleOne.Property.Property.Properties)
+#elif MONOMELON || MONOBEPINEX
+            foreach (var prop in ScheduleOne.Property.Property.Properties)
+#endif
+            {
+                if (prop.propertyCode == propertyCode)
                 {
                     return new PropertyWrapper(prop);
                 }
