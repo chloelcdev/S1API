@@ -100,5 +100,12 @@ namespace S1API.Property
         {
             return InnerProperty.DoBoundsContainPoint(point);
         }
+
+
+        public Transform NPCSpawnPoint
+        {
+            get => InnerProperty.NPCSpawnPoint;
+            set => InnerProperty.NPCSpawnPoint = value;
+        }
     }
 }
